@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
-const fs = require('fs');
 
 const app = express();
 app.use(express.static(path.join(__dirname,'/')));
@@ -16,11 +15,9 @@ app.get('/code', (req, res) => {
 
 app.post('/code', (req, res, next) => {
     var server = req.body.server; 
-    var language = server.language;
-    var description = server.split(/\r\n|\r\n/).join("\n");
-    console.log(language, description);
-    console.log('텍스트에 입력됬음 \n' + server);
+    console.log('코드 입력 \n' + server);
     res.status(302).redirect('/code');
+    console.log('서버전송성공');
 });
 
 // 포트연결
