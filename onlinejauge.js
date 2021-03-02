@@ -32,13 +32,17 @@ app.use(bodyparser.json());
 
 // 파일 받아옴
 app.get('/onlinejauge', (req, res) => {
-    res.sendFile(path.join(__dirname, 'tset.html'))
+    res.sendFile(path.join(__dirname, 'tset.html'));
 });
 
 // post 연결
 app.post('/onlinejauge', (req, res, next) => {
    var server = req.body.server;
-});
+   console.log("소스코드를 전송함", server);
+   // shell 연결확인
+   shell.exec('npm --version');
+   console.log('쉘 연결 완료 현재 npm 버전');
+}); 
 
 // 포트연결
 app.listen(3000, function() {
