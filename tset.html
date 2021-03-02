@@ -5,8 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>온라인저지 테스트서버</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
 <body>
+    <h2 id="testtitle">테스트 서버</h2>
     <form action="/onlinejauge" method="POST">
         <script src="test.js"></script>
         <textarea name="server" id="servers" cols="30" rows="10"></textarea>
@@ -25,8 +27,22 @@
             <th><input name="comfile" type="radio"></th>
             <td>Python3</td>
             <th><input name="comfile" type="radio"></th>
-            <button onclick="test()" name="submit">누르기</button>
+            <button id="serverbutton" name="submit">누르기</button>
         </table>
     </form>
+    <script>
+        $("#serverbutton").click(() => {
+            $.ajax(
+                {
+                    type:"POST", // 서버 전송방식
+                    url:"./onlinejauge",
+                    data: {}, // 전송 피라미터
+                    datatype: "text", // 받아온 데이터타입 (생략이 가능함)
+                    success: (time)=> {$("#testtitle").html(time)},
+                    error: (log)=>{alert("컴파일에 실패하였습니다"+log)}
+                }
+            )
+        })
+    </script>
 </body>
 </html>

@@ -2,7 +2,9 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
-const mysql = require('mysql')
+const mysql = require('mysql');
+// 쉘 스크립트 불러옴
+const shell = require('shelljs');
 const connection = mysql.createConnection({
     host : '127.0.0.1',
     user : 'root',
@@ -30,32 +32,17 @@ app.use(bodyparser.json());
 
 // 파일 받아옴
 app.get('/onlinejauge', (req, res) => {
-    res.sendFile(path.join(__dirname, 'tset.html'))
+    res.sendFile(path.join(__dirname, 'tset.html'));
 });
 
 // post 연결
 app.post('/onlinejauge', (req, res, next) => {
-    // 코드를 가져옴
-    var server = req.body.server;
-    
-    // 컴파일 도구 선택
-    const jaugeserver = function(comfile) {
-        switch(comfile) {
-            case 'c':
-                return 'c_cpp';
-            case 'cpp':
-                return 'c_cpp';
-            default:
-                return 'c_cpp';
-        }
-    }
-    console.log(jaugeserver);
-    console.log('코드 입력 \n' + server);
-
-    // 성공 시 /onlinejauge로 되돌림
-    res.status(302).redirect('/onlinejauge');
-    console.log('서버로 전송을 성공하였습니다');
-});
+   var server = req.body.server;
+   console.log("소스코드를 전송함", server);
+   // shell 연결확인
+   shell.exec('npm --version');
+   console.log('쉘 연결 완료 현재 npm 버전');
+}); 
 
 // 포트연결
 app.listen(3000, function() {
