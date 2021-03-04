@@ -10,7 +10,6 @@
 <body>
     <h2 id="testtitle">테스트 서버</h2>
     <form action="/onlinejauge" method="POST">
-        <script src="test.js"></script>
         <textarea name="server" id="servers" cols="30" rows="10"></textarea>
         <table>
             <td>C</td>
@@ -34,12 +33,16 @@
         $("#serverbutton").click(() => {
             $.ajax(
                 {
-                    type:"POST", // 서버 전송방식
+                    type:"GET", // 서버 전송방식
                     url:"./onlinejauge",
-                    data: {}, // 전송 피라미터
                     datatype: "text", // 받아온 데이터타입 (생략이 가능함)
-                    success: (time)=> {$("#testtitle").html(time)},
-                    error: (log)=>{alert("컴파일에 실패하였습니다"+log)}
+                    error : function() {
+                        alert("서버랑 통신에 실패하였습니다");
+                    },
+                    success : function(data) {
+                        alert("서버 통신 성공");
+                        console.log(data);
+                    }
                 }
             )
         })
