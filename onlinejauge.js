@@ -59,6 +59,7 @@ app.post('/onlinejauge', (req, res, next) => {
     console.log('성공데이터 : ', stdout);
     console.log('코드', code);
    });
+   console.log("테스트 파일");
    console.log('컴파일 데이터 받음', shelldata);
    const data = res.writeHead(200, { "Context-Type": "text/html" }); //보낼 헤더를 만듬
    console.log('클라이언트 데이터', data);
