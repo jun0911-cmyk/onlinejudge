@@ -6,9 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>온라인저지 테스트서버</title>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
     <h2 id="testtitle">테스트 서버</h2>
+    <div id="app">
+        {{ message }}
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'vue 테스트'
+            }
+        })
+    </script>
     <form action="/onlinejauge" method="POST">
         <textarea name="server" id="servers" cols="30" rows="10"></textarea>
         <table>
@@ -26,8 +38,21 @@
             <th><input name="comfile" type="radio"></th>
             <td>Python3</td>
             <th><input name="comfile" type="radio"></th>
-            <button id="serverbutton" name="submit">누르기</button>
+            <button id="serverbutton" name="submit">컴파일 실행하기</button>
         </table>
+        <textarea name="complie" style="resize:none; width:400px; height:100px;" id="compliecode" cols="30" rows="10" readonly>{{ message }}</textarea>
+        <div class="alert">
+            <strong>온라인저지 테스트서버</strong> 정상적으로 활성화 되었습니다
+        </div>
+        <style>
+            .alert {
+              padding: 15px;
+              border: 1px solid #d6e9c6;
+              border-radius: 4px;
+              color: #3c763d;
+              background-color: #dff0d8;
+            }
+        </style>
     </form>
     <script>
         $("#serverbutton").click(() => {
@@ -35,16 +60,22 @@
                 {
                     type:"GET", // 서버 전송방식
                     url:"./onlinejauge",
-                    datatype: "text", // 받아온 데이터타입 (생략이 가능함)
+                    datatype: "json", // 받아온 데이터타입 (생략이 가능함)
                     error : function() {
                         alert("서버랑 통신에 실패하였습니다");
                     },
                     success : function(data) {
-                        alert("서버 통신 성공");
-                        console.log(data);
+                        alert("서버 통신 성공");    
                     }
                 }
             )
+        })
+        var a = 1;
+        var compliecode = new Vue ({
+            el: '#compliecode',
+            data: {
+                message: `컴파일을 실행합니다`
+            }
         })
     </script>
 </body>

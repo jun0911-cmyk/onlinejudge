@@ -6,7 +6,6 @@ const mysql = require('mysql');
 // 쉘 스크립트 불러옴
 const shell = require('shelljs');
 const fs = require('fs');
-const { setUncaughtExceptionCaptureCallback, stdout, stderr } = require('process');
 const connection = mysql.createConnection({
     host : '127.0.0.1',
     user : 'root',
@@ -42,27 +41,32 @@ app.post('/onlinejauge', (req, res, next) => {
    var server = req.body.server;
    console.log("소스코드를 전송함", server);
    if(server == '') {
-       console.log('no complie');
+       console.log('아무 코드도 입력하지 않았습니다');
+       res.send('현재 아무코드도 입력하지않았습니다');
        return;
    }
    // shell 연결확인
    shell.exec('npm --version');
    console.log('쉘 연결 완료 현재 npm 버전');
    // 파일 만듬
-   fs.writeFileSync('quiz.c', server, encoding='utf8');
-   // 파일 컴파일 준비
-   process.stdin.setEncoding('utf8');
-   shell.exec('gcc -o compile.exe quiz.c');
+   var comfile = 'complie.c'
+   var source = server.split(/\r\n|\r\n/).join("\n");
+   fs.writeFile(comfile, source, 'utf8', function(error) {
+       console.log('성공적으로 생성되었습니다 파일이름 : ', comfile);
+   });
    // 컴파일 실행,쉘 실행 : 코드, 데이터를 받아옴
-   const shelldata = shell.exec('./comfile.exe', {async: true}, function (code, stdout, stderr) {
+   const comfiledata = shell.exec('gcc -c complie.c', {async: true}, function (code, stdout, stderr) {
     console.log('오류데이터 : ', stderr);
+    if(stdout == '') {
+        console.log('코드에 오류가 있습니다(오류데이터를 확인하세요)');
+    }
     console.log('성공데이터 : ', stdout);
     console.log('코드', code);
    });
    console.log("테스트 파일");
-   console.log('컴파일 데이터 받음', shelldata);
-   const data = res.writeHead(200, { "Context-Type": "text/html" }); //보낼 헤더를 만듬
-   console.log('클라이언트 데이터', data);
+   console.log('컴파일 데이터 받음'); 
+   res.writeHead(200, { "Context-Type": "text/html" }); //보낼 헤더를 만듬
+   res.json();
    res.end();
 }); 
 
