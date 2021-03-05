@@ -6,6 +6,7 @@ const mysql = require('mysql');
 // 쉘 스크립트 불러옴
 const shell = require('shelljs');
 const fs = require('fs');
+const { stderr } = require('process');
 const connection = mysql.createConnection({
     host : '127.0.0.1',
     user : 'root',
@@ -38,36 +39,40 @@ app.get('/onlinejauge', (req, res) => {
 
 // post 연결
 app.post('/onlinejauge', (req, res, next) => {
-   var server = req.body.server;
-   console.log("소스코드를 전송함", server);
-   if(server == '') {
-       console.log('아무 코드도 입력하지 않았습니다');
-       res.send('현재 아무코드도 입력하지않았습니다');
-       return;
-   }
-   // shell 연결확인
-   shell.exec('npm --version');
-   console.log('쉘 연결 완료 현재 npm 버전');
-   // 파일 만듬
-   var comfile = 'complie.c'
-   var source = server.split(/\r\n|\r\n/).join("\n");
-   fs.writeFile(comfile, source, 'utf8', function(error) {
-       console.log('성공적으로 생성되었습니다 파일이름 : ', comfile);
-   });
-   // 컴파일 실행,쉘 실행 : 코드, 데이터를 받아옴
-   const comfiledata = shell.exec('gcc -c complie.c', {async: true}, function (code, stdout, stderr) {
-    console.log('오류데이터 : ', stderr);
-    if(stdout == '') {
-        console.log('코드에 오류가 있습니다(오류데이터를 확인하세요)');
+    var server = req.body.server;
+    if(server == '') {
+        res.sendFile(__dirname + '/tsetfail.html');
+        return;
     }
-    console.log('성공데이터 : ', stdout);
-    console.log('코드', code);
-   });
-   console.log("테스트 파일");
-   console.log('컴파일 데이터 받음'); 
-   res.writeHead(200, { "Context-Type": "text/html" }); //보낼 헤더를 만듬
-   res.json();
-   res.end();
+    // 한글 입력금지 정규표현식
+    var check = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    // 한글 입력 유무검사
+    if(check.test(server)) {
+        res.sendFile(__dirname + '/tsetkorean.html');
+        return;
+    }
+    // shell 연결확인
+    shell.exec('npm --version');
+    console.log('쉘 연결 완료 현재 npm 버전');
+    // 파일 만듬
+    var comfile = 'complie.c'
+    var source = server.split(/\r\n|\r\n/).join("\n");
+    fs.writeFile(comfile, source, 'utf8', function(error) {
+        console.log('컴파일 실행중인 소스파일 이름 : ', comfile);
+    });
+    // 컴파일 실행,쉘 실행 : 코드, 데이터를 받아옴
+    var shelldata = shell.exec('gcc -c complie.c', function codedata(code, stdout, stderr) {
+        // json 파일로 컴파일 정보저장
+        var jaugejson = {
+            error: stderr,
+            success: stdout,
+            printcode: code
+        };
+        var jsondata = JSON.stringify(jaugejson);
+        console.log(jsondata);
+    });
+    console.log(shelldata);
+    //res.json(shelldata);
 }); 
 
 // 포트연결

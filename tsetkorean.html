@@ -9,6 +9,16 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
+    <div class="styspe">한글로 된 코드는 입력할수 없습니다</div>
+    <style>
+        .styspe {
+            padding: 15px;
+            border: 1px solid red;
+            border-radius: 4px;
+            color: black;
+            background-color: red;
+        }
+    </style>
     <h2 id="testtitle">테스트 서버</h2>
     <div id="app">
         {{ message }}
@@ -40,10 +50,9 @@
             <th><input id="python3" name="comfile" type="radio"></th>
             <button id="serverbutton" name="submit">컴파일 실행하기</button>
         </table>
-        <textarea name="complie" style="resize:none; width:400px; height:100px;" id="compliecode" cols="30" rows="10" readonly>{{ message }}
-        </textarea>
+        <textarea name="complie" style="resize:none; width:400px; height:100px;" id="compliecode" cols="30" rows="10" readonly>{{ message }}</textarea>
         <div class="alert">
-            <strong>온라인저지 테스트서버</strong> 정상적으로 활성화 되었습니다
+            <strong>온라인저지 테스트서버</strong> 실패하였습니다
         </div>
         <style>
             .alert {
@@ -56,7 +65,7 @@
         </style>
     </form>
     <script>
-        $("#serverbutton").click(() => {
+        /*$("#serverbutton").click(() => {
             $.ajax(
                 {
                     type:"GET", // 서버 전송방식
@@ -70,13 +79,12 @@
                     }
                 }
             )
-        })
+        })*/
         var a = 1;
         var compliecode = new Vue ({
             el: '#compliecode',
             data: {
-                message: `컴파일 실행준비중...`,
-                message: `실행중...`,
+                message: `컴파일을 실행합니다`
             }
         })
     </script>
