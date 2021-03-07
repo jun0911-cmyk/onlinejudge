@@ -60,14 +60,16 @@ app.post('/onlinejauge', (req, res, next) => {
     });
     // 컴파일 실행,쉘 실행 : 코드, 데이터를 받아옴
     let shelldata = shell.exec('gcc -c complie.c', (code, stdout, stderr) => {
-        // json 파일로 컴파일 정보저장
-        let jaugejson = {
-            error: stderr,
-            success: stdout,
-            code: code
-        };
-        var jsondata = JSON.stringify(jaugejson);
-        console.log(jsondata);
+        if(code == 1) {
+            // json 파일로 컴파일 정보저장
+            let jaugejson = {
+                error: stderr,
+                success: stdout,
+                code: code
+            };
+            var jsondata = JSON.stringify(jaugejson);
+            console.log(jsondata);
+        }
     });
     console.log(shelldata);
     //var data = shelldata;

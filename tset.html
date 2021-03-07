@@ -51,7 +51,7 @@
             <button id="serverbutton" name="submit">컴파일 실행하기</button>
         </table>
         <div id="servercomplieok">
-            <my-component></my-component>
+            <textarea name="complie" style="resize:none; width:600px; height:300px;" id="compliecode" cols="30" rows="10" readonly>{{ message }}</textarea>
         </div>
         <div class="alert">
             <strong>온라인저지 테스트서버</strong> 정상적으로 활성화 되었습니다
@@ -83,39 +83,22 @@
             )
         });
 
-        Vue.component('my-component', {
-            template: `<textarea name="complie" style="resize:none; width:600px; height:300px;" id="compliecode" cols="30" rows="10" readonly>실행준비중\n</textarea>`
-        })  
-        new Vue({
-            el: '#servercomplieok'
-        })
-
-        $("#serverbutton").click(() => {
-            var serverdata = '컴파일을 실행합니다';
-            new Vue ({
-                el: '#servercomplieok',
-                data: {
-                    message: `${serverdata}`
-                }
-            });
-        });
-
         var compliepick = new Vue ({
             el: '#picomplie',
             data: {
-                picked: ''
+                picked: '   '
             }
         });
-
-        console.log(compliepick);
+        
+        var vm = new Vue({
+            el: '#servercomplieok',
+            data: {
+                message: '컴파일 실행준비중'
+            }
+        })
         $("#serverbutton").click(() => {
-            var serverdata = '컴파일을 실행합니다';
-            var compliecode = new Vue ({
-                el: '#compliecode',
-                data: {
-                    message: `${serverdata}`
-                }
-            });
+            var success = '런타임 애러'
+            vm.message = `컴파일을 실행합니다\n선택한 컴파일러 : ${compliepick.picked}\n${success}\n컴파일 코드 채점중...\n채점완료\n서버를 종료합니다` // 데이터  변경
         });
     </script>
 </body>
