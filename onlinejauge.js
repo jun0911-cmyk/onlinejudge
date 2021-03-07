@@ -1,12 +1,10 @@
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
-const bodyparser = require('body-parser');
 const mysql = require('mysql');
 // 쉘 스크립트 불러옴
 const shell = require('shelljs');
 const fs = require('fs');
-const { stderr } = require('process');
 const connection = mysql.createConnection({
     host : '127.0.0.1',
     user : 'root',
@@ -29,8 +27,8 @@ connection.query('SELECT * from jauge_table', (err, rows, fields) => {
 const app = express();
 app.use(express.static(path.join(__dirname,'/')));
 app.use(morgan('dev'));
-app.use(bodyparser.urlencoded({ extended: true }));
-app.use(bodyparser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
 // 파일 받아옴
 app.get('/onlinejauge', (req, res) => {
@@ -61,17 +59,19 @@ app.post('/onlinejauge', (req, res, next) => {
         console.log('컴파일 실행중인 소스파일 이름 : ', comfile);
     });
     // 컴파일 실행,쉘 실행 : 코드, 데이터를 받아옴
-    var shelldata = shell.exec('gcc -c complie.c', function codedata(code, stdout, stderr) {
+    let shelldata = shell.exec('gcc -c complie.c', (code, stdout, stderr) => {
         // json 파일로 컴파일 정보저장
-        var jaugejson = {
+        let jaugejson = {
             error: stderr,
             success: stdout,
-            printcode: code
+            code: code
         };
         var jsondata = JSON.stringify(jaugejson);
         console.log(jsondata);
     });
     console.log(shelldata);
+    //var data = shelldata;
+    //console.log(data);
     //res.json(shelldata);
 }); 
 
