@@ -25,33 +25,34 @@
         <textarea name="server" id="servers" cols="30" rows="10"></textarea>
         <table>
             <div id="picomplie">
-                <input id="c" name="comfile" type="radio" value="c" v-model="picked">
+                <input id="c" name="comfile" type="radio" value="C언어" v-model="picked">
                 <label for="c">C</label>
                 <br>
-                <input id="cpp" name="comfile" type="radio" value="c++" v-model="picked">
+                <input id="cpp" name="comfile" type="radio" value="C++" v-model="picked">
                 <label for="c++">C++</label>
                 <br>
-                <input id="c#" name="comfile" type="radio" value="c#" v-model="picked">
+                <input id="c#" name="comfile" type="radio" value="C#" v-model="picked">
                 <label for="c#">C#</label>
                 <br>
-                <input id="js" name="comfile" type="radio" value="js" v-model="picked">
+                <input id="js" name="comfile" type="radio" value="자바스크립트" v-model="picked">
                 <label for="js">JS</label>
                 <br>
-                <input id="java" name="comfile" type="radio" value="java" v-model="picked">
+                <input id="java" name="comfile" type="radio" value="자바" v-model="picked">
                 <label for="java">Java</label>
                 <br>
-                <input id="python2" name="comfile" type="radio" value="python2" v-model="picked">
+                <input id="python2" name="comfile" type="radio" value="파이썬2" v-model="picked">
                 <label for="python2">Python2</label>
                 <br>
-                <input id="python3" name="comfile" type="radio" value="python3" v-model="picked">
+                <input id="python3" name="comfile" type="radio" value="파이썬3" v-model="picked">
                 <label for="python3">Python3</label>
                 <br>
                 <span> 선택한 컴파일러 : {{ picked }}               </span>
             </div>
             <button id="serverbutton" name="submit">컴파일 실행하기</button>
         </table>
-        <textarea name="complie" style="resize:none; width:600px; height:300px;" id="compliecode" cols="30" rows="10" readonly>{{ message }}
-        </textarea>
+        <div id="servercomplieok">
+            <my-component></my-component>
+        </div>
         <div class="alert">
             <strong>온라인저지 테스트서버</strong> 정상적으로 활성화 되었습니다
         </div>
@@ -81,12 +82,31 @@
                 }
             )
         });
+
+        Vue.component('my-component', {
+            template: `<textarea name="complie" style="resize:none; width:600px; height:300px;" id="compliecode" cols="30" rows="10" readonly>실행준비중\n</textarea>`
+        })  
+        new Vue({
+            el: '#servercomplieok'
+        })
+
+        $("#serverbutton").click(() => {
+            var serverdata = '컴파일을 실행합니다';
+            new Vue ({
+                el: '#servercomplieok',
+                data: {
+                    message: `${serverdata}`
+                }
+            });
+        });
+
         var compliepick = new Vue ({
             el: '#picomplie',
             data: {
                 picked: ''
             }
         });
+
         console.log(compliepick);
         $("#serverbutton").click(() => {
             var serverdata = '컴파일을 실행합니다';
