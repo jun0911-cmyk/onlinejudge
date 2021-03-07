@@ -68,7 +68,7 @@ app.post('/onlinejauge', (req, res, next) => {
                 code: code
             };
             var jsondata = JSON.stringify(jaugejson);
-            console.log(jsondata);
+            console.log(jsondata); 
         }
     });
     console.log(shelldata);
