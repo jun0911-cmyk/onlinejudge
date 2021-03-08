@@ -58,10 +58,18 @@ app.post('/onlinejauge', (req, res, next) => {
     fs.writeFile(comfile, source, 'utf8', function(error) {
         console.log('컴파일 실행중인 소스파일 이름 : ', comfile);
     });
+    var servercode = 0;
     // 컴파일 실행,쉘 실행 : 코드, 데이터를 받아옴
-    let shelldata = shell.exec('gcc -c complie.c', (code, stdout, stderr) => {
+    let complier = shell.exec('gcc -c complie.c', (code, stdout, stderr) => {
+        shell.exec('gcc -o complie complie.c >& complie.txt');
+        if(code == 0) {
+            console.log('컴파일하는데에서 오류발생없음');
+            servercode = 1;
+            return servercode;
+        }
         if(code == 1) {
             // json 파일로 컴파일 정보저장
+            servercode = 0;
             let jaugejson = {
                 error: stderr,
                 success: stdout,
@@ -69,15 +77,12 @@ app.post('/onlinejauge', (req, res, next) => {
             };
             var jsondata = JSON.stringify(jaugejson);
             console.log(jsondata); 
+            return servercode;
         }
     });
-    console.log(shelldata);
-    //var data = shelldata;
-    //console.log(data);
-    //res.json(shelldata);
 }); 
 
 // 포트연결
 app.listen(3000, function() {
     console.log('3000번포트 테스트 온라인저지 서버 구동성공');
-});
+}); 
