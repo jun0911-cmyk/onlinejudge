@@ -80,6 +80,7 @@ app.post('/onlinejauge', (req, res, next) => {
             return servercode;
         }
     });
+    console.log('server');
 }); 
 
 // 포트연결
