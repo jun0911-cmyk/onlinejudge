@@ -1,5 +1,2 @@
-#include <stdio.h>
-
-int main() {
-printf("hello world");
-}
+-p: -c: line 0: unexpected EOF while looking for matching `''
+-p: -c: line 1: syntax error: unexpected end of file
