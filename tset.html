@@ -97,7 +97,7 @@
             }
         })
         $("#serverbutton").click(() => {
-            var success = '런타임 애러'
+            var success = "<%= jsondata %>";
             vm.message = `컴파일을 실행합니다\n선택한 컴파일러 : ${compliepick.picked}\n결과 : ${success}\n컴파일 코드 채점중...\n채점완료\n서버를 종료합니다` // 데이터  변경
         });
     </script>

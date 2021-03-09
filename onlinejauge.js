@@ -60,12 +60,20 @@ app.post('/onlinejauge', (req, res, next) => {
     });
     var servercode = 0;
     // 컴파일 실행,쉘 실행 : 코드, 데이터를 받아옴
-    let complier = shell.exec('gcc -c complie.c', (code, stdout, stderr) => {
-        shell.exec('gcc -o complie complie.c >& complie.txt');
+    let complier = shell.exec('gcc -c complie.c', { timeout: 1000 /* 컴파일 실행기준을 1초로 설정*/ }, (code, stdout, stderr) => {
         if(code == 0) {
             console.log('컴파일하는데에서 오류발생없음');
-            servercode = 1;
-            return servercode;
+            shell.exec('mkdir -c ./complie.exe', { timeout: 1000 }, (code, stderr, stdout) => {
+                let jaugesuccessjson = {
+                    error: stderr,
+                    success: stdout,
+                    code: code
+                };
+                var jsondata = JSON.stringify(jaugesuccessjson);
+                console.log(jsondata); 
+            });
+            res.redirect('/onlinejauge');
+            return;
         }
         if(code == 1) {
             // json 파일로 컴파일 정보저장
@@ -77,10 +85,13 @@ app.post('/onlinejauge', (req, res, next) => {
             };
             var jsondata = JSON.stringify(jaugejson);
             console.log(jsondata); 
-            return servercode;
+            res.redirect('/onlinejauge');
+            return;
         }
+        console.log(code);
     });
-    console.log('server');
+    console.log('server');  
+    console.log(complier);
 }); 
 
 // 포트연결
