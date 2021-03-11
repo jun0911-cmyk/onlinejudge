@@ -5,6 +5,7 @@ const mysql = require('mysql');
 // 쉘 스크립트 불러옴
 const shell = require('shelljs');
 const fs = require('fs');
+const { json } = require('body-parser');
 const connection = mysql.createConnection({
     host : '127.0.0.1',
     user : 'root',
@@ -84,7 +85,17 @@ app.post('/onlinejauge', (req, res, next) => {
                 code: code
             };
             var jsondata = JSON.stringify(jaugejson);
-            console.log(jsondata); 
+            console.log(jsondata);
+            var sql = 'INSERT INTO compiledata (logs) VALUES (?)';
+            var sqlparams = [jsondata];   
+            connection.query(sql, sqlparams, function(err, rows) {
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    console.log('데이터 연결 성공', rows);
+                }
+            });
             res.redirect('/onlinejauge');
             return;
         }

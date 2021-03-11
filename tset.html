@@ -51,7 +51,7 @@
             <button id="serverbutton" name="submit">컴파일 실행하기</button>
         </table>
         <div id="servercomplieok">
-            <textarea name="complie" style="resize:none; width:600px; height:300px;" id="compliecode" cols="30" rows="10" readonly>{{ message }}</textarea>
+            <textarea v-bind:style="object" name="complie" style="resize:none; width:600px; height:300px;" id="compliecode" cols="30" rows="10" readonly>{{ message }}</textarea>
         </div>
         <div class="alert">
             <strong>온라인저지 테스트서버</strong> 정상적으로 활성화 되었습니다
@@ -70,8 +70,8 @@
         $("#serverbutton").click(() => {
             $.ajax(
                 {
-                    type:"GET", // 서버 전송방식
-                    url:"./onlinejauge",
+                    type:"get", // 서버 전송방식
+                    url:"onlinejauge.js",
                     datatype: "json", // 받아온 데이터타입 (생략이 가능함)
                     error : function() {
                         alert("서버랑 통신에 실패하였습니다");
@@ -93,12 +93,15 @@
         var vm = new Vue({
             el: '#servercomplieok',
             data: {
-                message: '컴파일 실행준비중'
+                message: '컴파일 실행준비중',
+                object: {
+                    color: 'blue',
+                    fontSize: '13px'
+                }
             }
         })
         $("#serverbutton").click(() => {
-            var success = "<%= jsondata %>";
-            vm.message = `컴파일을 실행합니다\n선택한 컴파일러 : ${compliepick.picked}\n결과 : ${success}\n컴파일 코드 채점중...\n채점완료\n서버를 종료합니다` // 데이터  변경
+            
         });
     </script>
 </body>
