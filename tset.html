@@ -9,20 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-    <h2 id="testtitle">테스트 서버</h2>
-    <div id="app">
-        {{ message }}
-    </div>
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                message: 'vue 테스트'
-            }
-        })
-    </script>
+    <h2 id="testtitle">onlinejauge test server</h2>
     <form action="/onlinejauge" method="POST">
-        <textarea name="server" id="servers" cols="30" rows="10"></textarea>
+        <textarea name="server" id="servers" cols="30" rows="10" placeholder="code input here"></textarea>
         <table>
             <div id="picomplie">
                 <input id="c" name="comfile" type="radio" value="C언어" v-model="picked">
@@ -71,7 +60,7 @@
             $.ajax(
                 {
                     type:"get", // 서버 전송방식
-                    url:"onlinejauge.js",
+                    url:"backend.js",
                     datatype: "json", // 받아온 데이터타입 (생략이 가능함)
                     error : function() {
                         alert("서버랑 통신에 실패하였습니다");
@@ -96,7 +85,7 @@
                 message: '컴파일 실행준비중',
                 object: {
                     color: 'blue',
-                    fontSize: '13px'
+                    fontSize: '20px'
                 }
             }
         })

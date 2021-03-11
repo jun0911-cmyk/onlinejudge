@@ -1,0 +1,4 @@
+node_modules
+mysql-connection.json
+package.json
+package-lock.json
