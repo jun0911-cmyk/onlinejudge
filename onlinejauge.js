@@ -9,11 +9,12 @@ const config = require('./mysql-connection.json');
 // mysql pool
 var pool = mysql.createPool(config);
 
-// database connection
+// onlinejauge database connection
+var onlinesql = 'SELECT * FROM jauge_table';
 pool.getConnection(function(err, conn) {
     if(!err) {
-        conn.query();
-        console.log('mysql connection');
+        conn.query(onlinesql);
+        console.log('onlinejauge mysql connection');
     }
     // warning!! you must return it to the pool using release after use
     conn.release();
@@ -37,7 +38,7 @@ app.post('/onlinejauge', (req, res, next) => {
         res.sendFile(__dirname + '/tsetfail.html');
         return;
     }
-    // korean fonts input if
+    // korean fonts is not input
     var check = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
     if(check.test(server)) {
         res.sendFile(__dirname + '/tsetkorean.html');
@@ -53,7 +54,7 @@ app.post('/onlinejauge', (req, res, next) => {
         console.log('C source file : ', comfile);
     });
 
-    shell.exec('gcc -c complie.c', { timeout: 1000 /* compile timeout 1 secounds */ }, (code, stdout, stderr) => {
+    shell.exec('gcc -c complie.c', { timeout: 1000 /* compile set timeout 1 secounds */ }, (code, stdout, stderr) => {
         // compile success code == 1
         if(code == 0) {
             console.log('not compile errors');
@@ -73,7 +74,7 @@ app.post('/onlinejauge', (req, res, next) => {
         if(code == 1) {
             let jsonsource = {
                 error: stderr,
-                success: stdout,
+                success: stdout,    
                 code: code
             };
             var jsondata = JSON.stringify(jsonsource);
